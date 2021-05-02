@@ -2,3 +2,7 @@ files/
 __pycache__/
 venv/
 .vscode/
+
+build/
+dist/
+blackjack.spec
