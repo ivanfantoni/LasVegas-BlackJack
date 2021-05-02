@@ -27,7 +27,7 @@ class LasVegas:
         self.colors = self.bg[choice(['green', 'blue'])]
 
         self.master = master
-        self.master.title('LasVegas')
+        self.master.title('Las Vegas - BlackJack')
         self.master.geometry('950x600')
         self.master.resizable(False, False)
         self.color = self.colors[2]
