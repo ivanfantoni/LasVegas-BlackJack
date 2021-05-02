@@ -221,7 +221,7 @@ class LasVegas:
     def insurance_btn(self):
         if self.game._bet.amount_insurance == 0:
             self.game_insurance = Button(self.bc, text='INSURANCE', command=self.insurance)
-            self.game_insurance.config(self.btn_config, width=8)
+            self.game_insurance.config(self.btn_config, width=9)
 
             self.bc.create_window(475, 267, window=self.game_insurance, anchor='center')
 
