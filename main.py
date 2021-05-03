@@ -357,6 +357,7 @@ class LasVegas:
             time.sleep(1)
             self.player_hit()
             self.master.update()
+            time.sleep(0.5)
             self.player_stand()
 
 
