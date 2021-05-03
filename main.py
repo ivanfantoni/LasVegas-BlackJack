@@ -489,6 +489,7 @@ class LasVegas:
         hit = self.game.hit(0)
         self.card_generator(self.bc, self.player_row, self.player_column, hit[0][-1])
         self.scores(0)
+        self.master.update()
         self.player_column += 25
         self.player_row -=20
         if self.score <=21:
