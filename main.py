@@ -54,6 +54,7 @@ class LasVegas:
         self.game_split = False
         self.d_scores = False
         self.game_insurance = False
+        self.p_stand = False
         self.amount = 0
 
         self.backcanvas()
@@ -208,7 +209,7 @@ class LasVegas:
         self.d_d_btn.image = d_d_im
         self.d_d_btn.config(border=0, bg=self.color,fg=self.color, activebackground=self.color, highlightthickness=0)
 
-        self.bc.create_window(475, 215, window=self.d_d_btn, anchor='center')
+        self.bc.create_window(475, 220, window=self.d_d_btn, anchor='center')
 
 
     def p_again(self):
@@ -581,6 +582,7 @@ class LasVegas:
 
 
     def split_player_stand(self, player):
+        self.p_stand = True
         if self.game_insurance:
             self.game_insurance.destroy()
 
@@ -628,6 +630,7 @@ class LasVegas:
 
 
     def player_stand(self):
+        self.p_stand = True
         if self.game_split:
             self.game_split.destroy()
         stand = self.game.player_stand(0)
@@ -660,20 +663,17 @@ class LasVegas:
                     self.card_generator(self.bc, self.p0_row, self.p0_column, c)
                     self.p0_column +=25
                     self.p0_row -=20
-                    self.master.update()
                     time.sleep(0.3)
                 if player == 1:
                     self.card_generator(self.bc, self.p1_row, self.p1_column, c)
                     self.p1_column +=25
                     self.p1_row -=20
-                    self.master.update()
                     time.sleep(0.3)
         else:
             for c in self.game_deal[player]:
                 self.card_generator(self.bc, self.player_row, self.player_column, c)
                 self.player_column +=25
                 self.player_row -=20
-                self.master.update()
                 time.sleep(0.3)
 
 
@@ -681,12 +681,10 @@ class LasVegas:
         self.card_generator(self.bc, self.dealer_row, self.dealer_column, self.game_deal['dealer'][0])
         self.dealer_column +=25
         self.dealer_row +=20
-        self.master.update()
         time.sleep(0.3)
         self.card_generator(self.bc, self.dealer_row, self.dealer_column, 'back')
         self.dealer_column +=25
         self.dealer_row +=20
-        self.master.update()
         time.sleep(0.3)
         if self.game_deal['dealer'][0][0] == 'A':
             self.insurance_btn()
@@ -697,9 +695,26 @@ class LasVegas:
         img_resize = img.resize((84, 122), Image.ANTIALIAS)
         image = ImageTk.PhotoImage(img_resize)
         self.card_image = Label(frame, image=image)
-        self.card_image.image = image
-            
-        self.bc.create_window(column, row, window=self.card_image)
+        self.card_image.image = image            
+        pos = [column, row]
+
+        if self.p_stand == True:
+            self.p_stand = False
+            self.c = self.bc.create_window(500, 120, window=self.card_image)
+            master.update()
+        else:
+            self.c = self.bc.create_window(950, 0, window=self.card_image)
+            for _ in range(35):
+                if self.bc.coords(self.c) != pos:
+                    if int(self.bc.coords(self.c)[0]) > column:
+                        self.bc.move(self.c, -20, 0)
+                        if int(self.bc.coords(self.c)[0]) - column < 20:
+                            xmove = int(self.bc.coords(self.c)[0]) - column
+                            self.bc.move(self.c, -xmove, 0)
+                    if int(self.bc.coords(self.c)[1]) < row:
+                        self.bc.move(self.c, 0, 20)
+                    master.update()
+
         self.sound.s_card()
 
 #------------------------------------------------------------------
@@ -722,6 +737,7 @@ class LasVegas:
             else:
                 self.dealer_column -= 25
                 self.dealer_row -=20
+                self.p_stand = True
                 self.card_generator(self.bc, self.dealer_row, self.dealer_column, self.game_deal['dealer'][1])
                 self.game_stand.config(state='disable')
                 self._tie()
@@ -953,6 +969,9 @@ class LasVegas:
 
         
 if __name__ == '__main__':
+    import sys, os
+    if getattr(sys, 'frozen', False):
+        os.chdir(sys._MEIPASS)
     master = Tk()
     master.iconphoto(False, PhotoImage(file='img/ico.png'))
     app = LasVegas(master)
