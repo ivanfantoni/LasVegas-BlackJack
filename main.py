@@ -56,6 +56,8 @@ class LasVegas:
         self.game_insurance = False
         self.p_stand = False
         self.amount = 0
+        self.mbtext = False
+        self.play_button = False
 
         self.backcanvas()
         self.snd()
@@ -75,32 +77,76 @@ class LasVegas:
         b_img= Image.open(self.colors[0])
         b_r = b_img.resize((952, 602), Image.ANTIALIAS)
         b_image = ImageTk.PhotoImage(image=b_r)
-        self.bc.create_image(475, 300, anchor='center', image=b_image)
-        self.bc.image=b_image
+        self.bgimg = b_image
+        self.background_game = self.bc.create_image(475, 300, anchor='center', image=b_image)
+        self.bc.tag_lower(self.background_game)
 
         back_img= Image.open(self.colors[1])
         back_r = back_img.resize((480, 160), Image.ANTIALIAS)
         back_image = ImageTk.PhotoImage(image=back_r)
-        self.bg_label = Label(self.bc, image=back_image, bd=0)
-        self.bg_label.image = back_image
-
-        self.bc.create_window(475, 300, window=self.bg_label, anchor='center')
+        self.logo_image = back_image
+        self.logo = self.bc.create_image(475, 300, image=back_image, anchor='center')
 
 
     def bet_frame(self):
         self.b_frame = Frame(self.bc, height=200, width=500)
         self.b_frame.config(self.frame_config, relief=None)
 
-        self.bc_b_frame = self.bc.create_window(475, 170, window=self.b_frame, anchor='center')
+        self.bc_b_frame = self.bc.create_window(475, 185, window=self.b_frame, anchor='center')
 
 
     def moneybox(self, x, y):
         money_img = Image.open(f'img/money.png')
         money_img_resize = money_img.resize((70, 70), Image.ANTIALIAS)
         money_im = ImageTk.PhotoImage(money_img_resize)
-        
+
+        mousex = master.winfo_pointerx() - master.winfo_rootx()
+        mousey = master.winfo_pointery() - master.winfo_rooty()
+        pos = [x, y]
+        mousepos = [mousex, mousey]   
         self.mb = money_im
-        self.bc.create_image(x, y, image=money_im, anchor='nw')
+        if self.play_button == False:
+            if mousex - x > 300:
+                xspeed = 2.5
+            elif mousex -x >141:
+                xspeed = 1.5
+            elif mousex -x >140:
+                xspeed = 1
+            elif x > mousex:
+                if x- mousex > 85:
+                    xspeed = 0.8
+                else:
+                    xspeed = 0.3
+            else:
+                xspeed = 1
+
+            self.chips = self.bc.create_image(mousex, mousey, image=money_im, anchor='nw')
+            self.bc.tag_raise(self.chips)
+
+            for _ in range(350):
+                if mousepos != pos:
+                    if int(self.bc.coords(self.chips)[0]) > x:
+                        self.bc.move(self.chips, -xspeed, 0)
+                        if int(self.bc.coords(self.chips)[0]) - x < xspeed:
+                            xmove = int(self.bc.coords(self.chips)[0]) - x
+                            self.bc.move(self.chips, -xmove, 0)
+                    elif int(self.bc.coords(self.chips)[0]) < x:
+                        self.bc.move(self.chips, xspeed, 0)
+                        if x - int(self.bc.coords(self.chips)[0]) < xspeed:
+                            xmove = x - int(self.bc.coords(self.chips)[0])
+                            self.bc.move(self.chips, xmove, 0)
+                    if int(self.bc.coords(self.chips)[1]) < y:
+                        self.bc.move(self.chips, 0, 2)
+                        if y - int(self.bc.coords(self.chips)[1]) < 2:
+                            ymove = y - int(self.bc.coords(self.chips)[1])
+                            self.bc.move(self.chips, 0, ymove)
+
+                master.update()
+        else:
+            self.chips = self.bc.create_image(x, y, image=money_im, anchor='nw')
+            self.bc.tag_raise(self.chips)
+            master.update()
+
         self.mbtext = self.bc.create_text(x+34, y+35, text=self.game._bet.amount, fill='white', font='ubuntu', anchor='center')
 
 
@@ -160,8 +206,8 @@ class LasVegas:
         self.game_play = Button(self.bc, text='PLAY', command=self.bj_deal)
         self.game_play.config(self.btn_config)
 
-        self.bc.create_window(475, 225, window=self.game_play, anchor='center')
-        
+        self.w_game_play = self.bc.create_window(475, 240, window=self.game_play, anchor='center')
+    
 
     def new_game(self):
         self.game_ng = Button(self.bc, text='NEW GAME', command=self.n_g)
@@ -231,7 +277,7 @@ class LasVegas:
         self.btn_game_deal = Button(self.bc, text='DEAL', command=self.re_deal)
         self.btn_game_deal.config(self.btn_config)
 
-        self.bc.create_window(475, 225, window=self.btn_game_deal, anchor='center')
+        self.w_game_deal = self.bc.create_window(475, 240, window=self.btn_game_deal, anchor='center')
 
 
     def hit(self):
@@ -294,8 +340,8 @@ class LasVegas:
         self.clean()
         self.game = Game(2)
         self.bet_frame()
-        self.play()
         self.bet()
+        self.play()
         self.amount = 0
         self._cash(self.game._bet.cash)
         self.sound.s_welcome()
@@ -308,9 +354,10 @@ class LasVegas:
     def play_again(self):
         self.clean()
         self._cash(self.game._bet.cash)
-        self.deal()
         self.bet_frame()
         self.bet()
+        self.deal()
+        self.play_button = False
 
 
     def bj_bet(self, amount):
@@ -327,9 +374,9 @@ class LasVegas:
             self.sound.s_chips()
 
             self.betting = self.game._bet.bet(amount)
+            self.moneybox(360, 450)
             
             self.bc.itemconfigure(self.money, text=f'${self.game._bet.cash}')
-            self.moneybox(360, 450)
 
 
     def insurance(self):
@@ -391,13 +438,21 @@ class LasVegas:
 
 
     def all_in(self):
-        self.game._bet.amount = self.game._bet.cash
-        self.betting = self.game._bet.bet(self.game._bet.cash)
-        self.bc.itemconfigure(self.money, text=f'${self.game._bet.cash}')
-        self.moneybox(360, 450)
+        if self.game._bet.cash == 0:
+            flash = threading.Thread(target=self.amount_flash)
+            nobet = threading.Thread(target=self.no_bet)
+            nobet.start()
+            flash.start()
+        else:
+            self.sound.s_chips()
+            self.game._bet.amount = self.game._bet.cash
+            self.betting = self.game._bet.bet(self.game._bet.cash)
+            self.moneybox(360, 450)
+            self.bc.itemconfigure(self.money, text=f'${self.game._bet.cash}')
 
 
     def bj_deal(self):
+        self.play_button = True
         self.p0 = False
         self.p1 = False
         if self.game._bet.amount == 0:
@@ -413,7 +468,6 @@ class LasVegas:
             self.game.HAND[0] = []
             self.game.HAND[1] = []
 
-            #self.clean()
             self.b_frame.destroy()
             self.game_deal = self.game.deal()
             self.player_cards(0)
@@ -430,6 +484,7 @@ class LasVegas:
 
 
     def re_deal(self):
+        self.play_button = True
         self.p0 = False
         self.p1 = False
         if self.game._bet.amount == 0:
@@ -631,6 +686,8 @@ class LasVegas:
 
     def player_stand(self):
         self.p_stand = True
+        if self.d_d_btn:
+            self.d_d_btn.destroy()
         if self.game_split:
             self.game_split.destroy()
         stand = self.game.player_stand(0)
@@ -757,7 +814,7 @@ class LasVegas:
             self.bjlabel = Label(self.bc,image=bj_im)
             self.bjlabel.image = bj_im
             self.bjlabel.config(border=0, bg=self.color,fg=self.color, activebackground=self.color, highlightthickness=0)
-            self.bg_label.destroy()
+            self.bc.delete(self.logo)
             self.bc.create_window(475,300, window=self.bjlabel, anchor='center')
 
             self.game_hit.destroy()
@@ -805,7 +862,7 @@ class LasVegas:
         self.dw_label.image = dw_im
         self.dw_label.config(border=0, bg=self.color,fg=self.color)
 
-        self.bg_label.destroy()
+        self.bc.delete(self.logo)
         self.bc.create_window(475, 300, window=self.dw_label, anchor='center')
 
         self.p_again()
@@ -827,7 +884,7 @@ class LasVegas:
         self.pw_label = Label(self.bc,image=pw_im)
         self.pw_label.image = pw_im
         self.pw_label.config(border=0, bg=self.color,fg=self.color)
-        self.bg_label.destroy()
+        self.bc.delete(self.logo)
         self.bc.create_window(475, 300, window=self.pw_label, anchor='center')
 
         self.game._bet.cash = self.game._bet.winnning(self.game._bet.amount)
@@ -852,7 +909,7 @@ class LasVegas:
         self.tie_label.image = tie_im
         self.tie_label.config(border=0, bg=self.color,fg=self.color)
 
-        self.bg_label.destroy()
+        self.bc.delete(self.logo)
         self.bc.create_window(475, 300, window=self.tie_label, anchor='center')
         time.sleep(0.4)
         self.sound.s_tie()
@@ -874,7 +931,7 @@ class LasVegas:
         self.pw_label.config(border=0, bg=self.color,fg=self.color)
 
         if player == 0:            
-            self.bg_label.destroy()
+            self.bc.delete(self.logo)
             self.bc.create_window(350, 300, window=self.pw_label, anchor='center')
 
             self.game._bet.cash = self.game._bet.winnning(self.game._bet.amount)
@@ -883,7 +940,7 @@ class LasVegas:
             time.sleep(1)
 
         if player == 1:
-            self.bg_label.destroy()
+            self.bc.delete(self.logo)
             self.bc.create_window(650, 300, window=self.pw_label, anchor='center')
 
             self.game._bet.cash = self.game._bet.winnning(self.game._bet.amount2)
@@ -903,7 +960,7 @@ class LasVegas:
         self.dw_label.config(border=0, bg=self.color,fg=self.color)
 
         if player == 0:
-            self.bg_label.destroy()
+            self.bc.delete(self.logo)
             self.bc.create_window(350, 300, window=self.dw_label, anchor='center')
 
             self.game._bet.amount = 0
@@ -912,7 +969,7 @@ class LasVegas:
             time.sleep(1)
 
         if player == 1:
-            self.bg_label.destroy()
+            self.bc.delete(self.logo)
             self.bc.create_window(650, 300, window=self.dw_label, anchor='center')
 
             self.game._bet.amount2 = 0
@@ -934,7 +991,7 @@ class LasVegas:
         self.tie_label.config(border=0, bg=self.color,fg=self.color)
 
         if player == 0:
-            self.bg_label.destroy()
+            self.bc.delete(self.logo)
             self.bc.create_window(350, 300, window=self.tie_label, anchor='center')
 
             self.game._bet.tie(self.game._bet.amount)
@@ -944,7 +1001,7 @@ class LasVegas:
             time.sleep(1)
 
         if player == 1:
-            self.bg_label.destroy()
+            self.bc.delete(self.logo)
             self.bc.create_window(650, 300, window=self.tie_label, anchor='center')
 
 
