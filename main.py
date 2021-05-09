@@ -22,9 +22,20 @@ class LasVegas:
                 'img/greenback.png',
                 'img/greenblackjack.png',
                 '#005b13'
+            ],
+            'red':[
+                'img/redback.png',
+                'img/redblackjack.png',
+                '#8b0000'
+            ],
+            'grey':[
+                'img/greyback.png',
+                'img/greyblackjack.png',
+                '#494949'
             ]
         }
-        self.colors = self.bg[choice(['green', 'blue'])]
+        self.choice_table = choice(['green', 'blue', 'red', 'grey'])
+        self.colors = self.bg[self.choice_table]
 
         self.master = master
         self.master.title('Las Vegas - BlackJack')
@@ -50,6 +61,8 @@ class LasVegas:
         }
 
         self.d_d_btn = False
+        self.ins_btn = False
+        self.ddbtn = False
         self.game_deal = False
         self.game_split = False
         self.d_scores = False
@@ -60,6 +73,7 @@ class LasVegas:
         self.play_button = False
 
         self.backcanvas()
+        self.change_table()
         self.snd()
         self.default_buttons()
         self.objects_position()
@@ -172,6 +186,15 @@ class LasVegas:
         self.mbtext_ins = self.bc.create_text(x+34, y+35, text=int(self.game._bet.amount_insurance), fill='white', font='ubuntu', anchor='center')
 
 
+    def moneybox_ddown(self, x, y):
+        money_img = Image.open(f'img/x2.png')
+        money_img_resize = money_img.resize((70, 70), Image.ANTIALIAS)
+        money_im = ImageTk.PhotoImage(money_img_resize)
+        
+        self.mb_dd = money_im
+        self.bc.create_image(x, y, image=money_im, anchor='nw')
+
+
 #------------------------------------------------------------------
 #                           Cleaned Status                        -
 #------------------------------------------------------------------
@@ -191,6 +214,9 @@ class LasVegas:
         self.p1_column = 625
         self.p0_row= 450
         self.p1_row= 450
+
+        self.ins_btn = False
+        self.ddbtn = False
 
 
     def snd(self):
@@ -221,6 +247,13 @@ class LasVegas:
         self.game_exit.config(self.btn_config)
 
         self.bc.create_window(925, 25, window=self.game_exit, anchor='ne')
+
+
+    def change_table(self):
+        self.game_table = Button(self.bc, text='CHANGE TABLE', command=self.change_table_func)
+        self.game_table.config(self.btn_config)
+
+        self.bc.create_window(925, 75, window=self.game_table, anchor='ne')
 
 
     def bet(self):
@@ -255,7 +288,10 @@ class LasVegas:
         self.d_d_btn.image = d_d_im
         self.d_d_btn.config(border=0, bg=self.color,fg=self.color, activebackground=self.color, highlightthickness=0)
 
-        self.bc.create_window(475, 220, window=self.d_d_btn, anchor='center')
+        self.ddbtn = self.bc.create_window(475, 250, window=self.d_d_btn, anchor='center')
+        if self.ins_btn != False:
+            self.bc.move(self.ins_btn, -35, 0)
+            self.bc.move(self.ddbtn, 35, 0)
 
 
     def p_again(self):
@@ -263,14 +299,23 @@ class LasVegas:
         self.game_p_again.config(self.btn_config)
 
         self.bc.create_window(475, 225, window=self.game_p_again, anchor='center')
+        self.change_table()
 
 
     def insurance_btn(self):
         if self.game._bet.amount_insurance == 0:
-            self.game_insurance = Button(self.bc, text='INSURANCE', command=self.insurance)
-            self.game_insurance.config(self.btn_config, width=9)
+            i_img = Image.open(f'img/ins.png')
+            i_img_resize = i_img.resize((70, 70), Image.ANTIALIAS)
+            i_im = ImageTk.PhotoImage(i_img_resize)
 
-            self.bc.create_window(475, 267, window=self.game_insurance, anchor='center')
+            self.game_insurance = Button(self.bc, image=i_im, command=self.insurance)
+            self.game_insurance.image = i_im
+            self.game_insurance.config(border=0, bg=self.color,fg=self.color, activebackground=self.color, highlightthickness=0)
+
+            self.ins_btn = self.bc.create_window(475, 250, window=self.game_insurance, anchor='center')
+            if self.ddbtn != False:
+                self.bc.move(self.ins_btn, -35, 0)
+                self.bc.move(self.ddbtn, 35, 0)
 
 
     def deal(self):
@@ -338,6 +383,7 @@ class LasVegas:
 
     def n_g(self):
         self.clean()
+        self.game_table.destroy()
         self.game = Game(2)
         self.bet_frame()
         self.bet()
@@ -345,10 +391,32 @@ class LasVegas:
         self.amount = 0
         self._cash(self.game._bet.cash)
         self.sound.s_welcome()
+        self.play_button = False
 
 
     def exit(self):
         master.destroy()
+
+
+    def change_table_func(self):
+        colors = []
+        for c in self.bg:
+            if self.choice_table != c:
+                colors.append(c)
+
+        self.choice_table = choice(colors)
+        self.colors = self.bg[self.choice_table]
+        self.color = self.colors[2]
+        self.master.config(bg=self.color)
+        self.frame_config = {
+            'bg':self.color,
+            'borderwidth':2,
+            'relief':GROOVE,
+            'background':self.color
+        }
+
+        self.clean()
+        self.change_table()
 
 
     def play_again(self):
@@ -394,10 +462,15 @@ class LasVegas:
         else:
             self.game._bet.bet(self.game._bet.amount)
             self.game._bet.amount *= 2
-
+            self.d_d_btn.destroy()
+            self.moneybox_ddown(290, 450)
+            self.game_stand.destroy()
+            self.game_hit.destroy()
+            if self.game_split != False:
+                self.game_split.destroy()
+            self.master.update()
             self.sound.s_option()
             time.sleep(0.5)
-            self.d_d_btn.destroy()
             self.moneybox(360, 450)
             self.master.update()
             self.bc.itemconfigure(self.money, text=f'${self.game._bet.cash}')
@@ -688,6 +761,8 @@ class LasVegas:
         self.p_stand = True
         if self.d_d_btn:
             self.d_d_btn.destroy()
+        if self.ins_btn != False:
+            self.bc.delete(self.ins_btn)
         if self.game_split:
             self.game_split.destroy()
         stand = self.game.player_stand(0)
@@ -792,6 +867,9 @@ class LasVegas:
                 self.game._bet.cash = self.game._bet.black_jack(self.game._bet.amount)
                 return True
             else:
+                if self.ins_btn != False:
+                    self.bc.delete(self.ins_btn)
+
                 self.dealer_column -= 25
                 self.dealer_row -=20
                 self.p_stand = True
