@@ -65,6 +65,7 @@ class LasVegas:
         self.ddbtn = False
         self.game_deal = False
         self.game_split = False
+        self.game_hit = False
         self.d_scores = False
         self.game_insurance = False
         self.p_stand = False
@@ -614,6 +615,8 @@ class LasVegas:
             self.d_d_btn.destroy()
         if self.game_split:
             self.game_split.destroy()
+        if self.ins_btn != False:
+            self.bc.delete(self.ins_btn)
         if len(self.game_deal[0]) == 4 or len(self.game_deal[0]) == 8 or len(self.game_deal[0]) == 12:
             self.player_row +=80
         hit = self.game.hit(0)
@@ -625,9 +628,11 @@ class LasVegas:
         if self.score <=21:
             self.bc.delete(self.p_scores)
             self.player_scores()
-            if self.score == 21:
-                self.game_hit.config(state='disable')
-
+            try:
+                if self.score == 21:
+                    self.game_hit.config(state='disable')
+            except TclError:
+                pass
         else:
             self.bc.delete(self.p_scores)
             self.player_scores()
