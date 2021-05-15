@@ -728,12 +728,9 @@ class LasVegas:
             self.clean()
             if self.game._bet.amount_insurance != 0:
                 self.moneybox_insurance(360, 120)
-
             self.game.split()
             self._cash(self.game._bet.cash)
             self.master.update()
-            #self.game_hit.destroy()
-            #self.game_stand.destroy()
             self.bc.delete(self.game_hit)
             self.bc.delete(self.game_stand)
             self.dealer_cards()
