@@ -683,13 +683,13 @@ class LasVegas:
                 self.split_player_scores(player)
                 if self.score == 21:
                     self.bc.itemconfigure(self.game_hit_l, state='disable')
-                    self.l_stand_img['format'] = 'png -alpha 0.5'
+                    self.l_hit_img['format'] = 'png -alpha 0.5'
 
             else:
                 self.bc.delete(self.p_scores_0)
                 self.split_player_scores(player)
                 self.bc.itemconfigure(self.game_hit_l, state='disable')
-                self.l_stand_img['format'] = 'png -alpha 0.5'
+                self.l_hit_img['format'] = 'png -alpha 0.5'
 
         if player == 1:
             if len(self.game_deal[player]) == 4 or len(self.game_deal[player]) == 8 or len(self.game_deal[player]) == 12:
@@ -705,13 +705,13 @@ class LasVegas:
                 self.split_player_scores(player)
                 if self.score == 21:
                     self.bc.itemconfigure(self.game_hit_r, state='disable')
-                    self.r_stand_img['format'] = 'png -alpha 0.5'
+                    self.r_hit_img['format'] = 'png -alpha 0.5'
 
             else:
                 self.bc.delete(self.p_scores_1)
                 self.split_player_scores(player)
                 self.bc.itemconfigure(self.game_hit_r, state='disable')
-                self.r_stand_img['format'] = 'png -alpha 0.5'
+                self.r_hit_img['format'] = 'png -alpha 0.5'
 
 
     def player_split(self):
