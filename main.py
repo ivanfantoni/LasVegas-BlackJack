@@ -230,31 +230,35 @@ class LasVegas:
 
 
     def play(self):
-        self.game_play = Button(self.bc, text='PLAY', command=self.bj_deal)
-        self.game_play.config(self.btn_config)
-
-        self.w_game_play = self.bc.create_window(475, 240, window=self.game_play, anchor='center')
+        i = PhotoImage(file='img/play_.png')
+        self.stand_img = i
+        self.game_play = self.bc.create_image(475, 240, image=i, anchor='center')
+        self.bc.tag_bind(self.game_play, '<Button-1>', lambda event, x=self.game_play: self.button_press(x))
+        self.bc.tag_bind(self.game_play, '<ButtonRelease-1>', lambda event, x=self.game_play, func=self.bj_deal: self.button_release(button=x, func=func))
     
 
     def new_game(self):
-        self.game_ng = Button(self.bc, text='NEW GAME', command=self.n_g)
-        self.game_ng.config(self.btn_config)
-
-        self.bc.create_window(25, 25, window=self.game_ng, anchor='nw')
+        i = PhotoImage(file='img/ng_.png')
+        self.ng_img = i
+        self.game_ng = self.bc.create_image(100, 40, image=i, anchor='center')
+        self.bc.tag_bind(self.game_ng, '<Button-1>', lambda event, x=self.game_ng: self.button_press(x))
+        self.bc.tag_bind(self.game_ng, '<ButtonRelease-1>', lambda event, x=self.game_ng, func=self.n_g: self.button_release(button=x, func=func))
 
 
     def exit_btn(self):
-        self.game_exit = Button(self.bc, text='EXIT', command=self.exit)
-        self.game_exit.config(self.btn_config)
-
-        self.bc.create_window(925, 25, window=self.game_exit, anchor='ne')
+        i = PhotoImage(file='img/exit_.png')
+        self.exit_img = i
+        self.game_exit = self.bc.create_image(850, 40, image=i, anchor='center')
+        self.bc.tag_bind(self.game_exit, '<Button-1>', lambda event, x=self.game_exit: self.button_press(x))
+        self.bc.tag_bind(self.game_exit, '<ButtonRelease-1>', lambda event, x=self.game_exit, func=self.exit: self.button_release(button=x, func=func))
 
 
     def change_table(self):
-        self.game_table = Button(self.bc, text='CHANGE TABLE', command=self.change_table_func)
-        self.game_table.config(self.btn_config)
-
-        self.bc.create_window(925, 75, window=self.game_table, anchor='ne')
+        i = PhotoImage(file='img/ct_.png')
+        self.ct_img = i
+        self.game_table = self.bc.create_image(850, 90, image=i, anchor='center')
+        self.bc.tag_bind(self.game_table, '<Button-1>', lambda event, x=self.game_table: self.button_press(x))
+        self.bc.tag_bind(self.game_table, '<ButtonRelease-1>', lambda event, x=self.game_table, func=self.change_table_func: self.button_release(button=x, func=func))
 
 
     def bet(self):
@@ -296,10 +300,12 @@ class LasVegas:
 
 
     def p_again(self):
-        self.game_p_again = Button(self.bc, text='PLAY AGAIN', command=self.play_again)
-        self.game_p_again.config(self.btn_config)
+        i = PhotoImage(file='img/playagain_.png')
+        self.playagain_img = i
+        self.game_p_again = self.bc.create_image(475, 225, image=i, anchor='center')
+        self.bc.tag_bind(self.game_p_again, '<Button-1>', lambda event, x=self.game_p_again: self.button_press(x))
+        self.bc.tag_bind(self.game_p_again, '<ButtonRelease-1>', lambda event, x=self.game_p_again, func=self.play_again: self.button_release(button=x, func=func))
 
-        self.bc.create_window(475, 225, window=self.game_p_again, anchor='center')
         self.change_table()
 
 
@@ -320,61 +326,81 @@ class LasVegas:
 
 
     def deal(self):
-        self.btn_game_deal = Button(self.bc, text='DEAL', command=self.re_deal)
-        self.btn_game_deal.config(self.btn_config)
-
-        self.w_game_deal = self.bc.create_window(475, 240, window=self.btn_game_deal, anchor='center')
+        i = PhotoImage(file='img/deal_.png')
+        self.deal_img = i
+        self.btn_game_deal = self.bc.create_image(475, 240, image=i, anchor='center')
+        self.bc.tag_bind(self.btn_game_deal, '<Button-1>', lambda event, x=self.btn_game_deal: self.button_press(x))
+        self.bc.tag_bind(self.btn_game_deal, '<ButtonRelease-1>', lambda event, x=self.btn_game_deal, func=self.re_deal: self.button_release(button=x, func=func))
 
 
     def hit(self):
-        self.game_hit = Button(self.bc, text='HIT', command=self.player_hit)
-        self.game_hit.config(self.btn_config)
-
-        self.bc.create_window(25, 400, window=self.game_hit, anchor='nw')
+        i = PhotoImage(file='img/hit_.png')
+        self.hit_img = i
+        self.game_hit = self.bc.create_image(100, 400, image=i, anchor='center')
+        self.bc.tag_bind(self.game_hit, '<Button-1>', lambda event, x=self.game_hit: self.button_press(x))
+        self.bc.tag_bind(self.game_hit, '<ButtonRelease-1>', lambda event, x=self.game_hit, func=self.player_hit: self.button_release(button=x, func=func))
 
 
     def split(self):
         if self.d_d_btn == True:
             self.d_d_btn.destroy()
-        self.game_split = Button(self.bc, text='SPLIT', command=self.player_split)
-        self.game_split.config(self.btn_config)
-
-        self.bc.create_window(25, 500, window=self.game_split, anchor='nw')
+        i = PhotoImage(file='img/split_.png')
+        self.split_img = i
+        self.game_split = self.bc.create_image(100, 500, image=i, anchor='center')
+        self.bc.tag_bind(self.game_split, '<Button-1>', lambda event, x=self.game_split: self.button_press(x))
+        self.bc.tag_bind(self.game_split, '<ButtonRelease-1>', lambda event, x=self.game_split, func=self.player_split: self.button_release(button=x, func=func))
 
 
     def stand(self):
-        self.game_stand = Button(self.bc, text='STAND', command=self.player_stand)
-        self.game_stand.config(self.btn_config)
-
-        self.bc.create_window(25, 450, window=self.game_stand, anchor='nw')
+        i = PhotoImage(file='img/stand_.png')
+        self.stand_img = i
+        self.game_stand = self.bc.create_image(100, 450, image=i, anchor='center')
+        self.bc.tag_bind(self.game_stand, '<Button-1>', lambda event, x=self.game_stand: self.button_press(x))
+        self.bc.tag_bind(self.game_stand, '<ButtonRelease-1>', lambda event, x=self.game_stand, func=self.player_stand: self.button_release(button=x, func=func))
 
 
     def hit_left(self):
-        self.game_hit_l = Button(self.bc, text='HIT', command=lambda player=0: self.split_hit(player))
-        self.game_hit_l.config(self.btn_config, width=7)
-
-        self.bc.create_window(275, 550, window=self.game_hit_l, anchor='center')
+        i = PhotoImage(file='img/s_hit_.png')
+        self.l_hit_img = i
+        self.game_hit_l = self.bc.create_image(270, 550, image=i, anchor='center')
+        self.bc.tag_bind(self.game_hit_l, '<Button-1>', lambda event, x=self.game_hit_l: self.button_press(x))
+        self.bc.tag_bind(self.game_hit_l, '<ButtonRelease-1>', lambda event, x=self.game_hit_l, func=self.split_hit, player=0: self.button_release(button=x, func=func, player=player))
 
 
     def stand_left(self):
-        self.game_stand_left = Button(self.bc, text='STAND', command=lambda player=0: self.split_player_stand(player))
-        self.game_stand_left.config(self.btn_config, width=7)
-
-        self.bc.create_window(375, 550, window=self.game_stand_left, anchor='center')
+        i = PhotoImage(file='img/s_stand_.png')
+        self.l_stand_img = i
+        self.game_stand_left = self.bc.create_image(400, 550, image=i, anchor='center')
+        self.bc.tag_bind(self.game_stand_left, '<Button-1>', lambda event, x=self.game_stand_left: self.button_press(x))
+        self.bc.tag_bind(self.game_stand_left, '<ButtonRelease-1>', lambda event, x=self.game_stand_left, func=self.split_player_stand, player=0: self.button_release(button=x, func=func, player=player))
 
 
     def hit_right(self):
-        self.game_hit_r = Button(self.bc, text='HIT', command=lambda player=1: self.split_hit(player))
-        self.game_hit_r.config(self.btn_config, width=7)
-
-        self.bc.create_window(575, 550, window=self.game_hit_r, anchor='center')
+        i = PhotoImage(file='img/s_hit_.png')
+        self.r_hit_img = i
+        self.game_hit_r = self.bc.create_image(570, 550, image=i, anchor='center')
+        self.bc.tag_bind(self.game_hit_r, '<Button-1>', lambda event, x=self.game_hit_r: self.button_press(x))
+        self.bc.tag_bind(self.game_hit_r, '<ButtonRelease-1>', lambda event, x=self.game_hit_r, func=self.split_hit, player=1: self.button_release(button=x, func=func, player=player))
 
 
     def stand_right(self):
-        self.game_stand_right = Button(self.bc, text='STAND', command=lambda player=1: self.split_player_stand(player))
-        self.game_stand_right.config(self.btn_config, width=7)
+        i = PhotoImage(file='img/s_stand_.png')
+        self.r_stand_img = i
+        self.game_stand_right = self.bc.create_image(700, 550, image=i, anchor='center')
+        self.bc.tag_bind(self.game_stand_right, '<Button-1>', lambda event, x=self.game_stand_right: self.button_press(x))
+        self.bc.tag_bind(self.game_stand_right, '<ButtonRelease-1>', lambda event, x=self.game_stand_right, func=self.split_player_stand, player=1: self.button_release(button=x, func=func, player=player))
 
-        self.bc.create_window(675, 550, window=self.game_stand_right, anchor='center')
+
+    def button_press(self, button):
+        self.bc.move(button, 1, 1)
+
+
+    def button_release(self, button, func, player=None):
+        self.bc.move(button, -1, -1)
+        if player != None:
+            func(player)
+        else:
+            func()
 
 
 #------------------------------------------------------------------
@@ -383,8 +409,9 @@ class LasVegas:
 
 
     def n_g(self):
+        if self.bc.find_withtag(self.game_table):
+            self.bc.delete(self.game_table)
         self.clean()
-        self.game_table.destroy()
         self.game = Game(2)
         self.bet_frame()
         self.bet()
@@ -465,10 +492,10 @@ class LasVegas:
             self.game._bet.amount *= 2
             self.d_d_btn.destroy()
             self.moneybox_ddown(290, 450)
-            self.game_stand.destroy()
-            self.game_hit.destroy()
+            self.bc.delete(self.game_hit)
+            self.bc.delete(self.game_stand)
             if self.game_split != False:
-                self.game_split.destroy()
+                self.bc.delete(self.game_split)
             self.master.update()
             self.sound.s_option()
             time.sleep(0.5)
@@ -532,8 +559,7 @@ class LasVegas:
         if self.game._bet.amount == 0:
             self.no_bet()
         else:
-            self.game_play.destroy()
-
+            self.bc.delete(self.game_play)
             if self.game_deal:
                 self.clean()
                 self.moneybox(360, 450)
@@ -614,7 +640,7 @@ class LasVegas:
         if self.d_d_btn:
             self.d_d_btn.destroy()
         if self.game_split:
-            self.game_split.destroy()
+            self.bc.delete(self.game_split)
         if self.ins_btn != False:
             self.bc.delete(self.ins_btn)
         if len(self.game_deal[0]) == 4 or len(self.game_deal[0]) == 8 or len(self.game_deal[0]) == 12:
@@ -630,7 +656,8 @@ class LasVegas:
             self.player_scores()
             try:
                 if self.score == 21:
-                    self.game_hit.config(state='disable')
+                    self.bc.itemconfigure(self.game_hit, state='disable')
+                    self.hit_img['format'] = 'png -alpha 0.5'
             except TclError:
                 pass
         else:
@@ -655,12 +682,14 @@ class LasVegas:
                 self.bc.delete(self.p_scores_0)
                 self.split_player_scores(player)
                 if self.score == 21:
-                    self.game_hit_l.config(state='disable')
+                    self.bc.itemconfigure(self.game_hit_l, state='disable')
+                    self.l_stand_img['format'] = 'png -alpha 0.5'
 
             else:
                 self.bc.delete(self.p_scores_0)
                 self.split_player_scores(player)
-                self.game_hit_l.config(state='disable')
+                self.bc.itemconfigure(self.game_hit_l, state='disable')
+                self.l_stand_img['format'] = 'png -alpha 0.5'
 
         if player == 1:
             if len(self.game_deal[player]) == 4 or len(self.game_deal[player]) == 8 or len(self.game_deal[player]) == 12:
@@ -675,15 +704,18 @@ class LasVegas:
                 self.bc.delete(self.p_scores_1)
                 self.split_player_scores(player)
                 if self.score == 21:
-                    self.game_hit_r.config(state='disable')
+                    self.bc.itemconfigure(self.game_hit_r, state='disable')
+                    self.r_stand_img['format'] = 'png -alpha 0.5'
 
             else:
                 self.bc.delete(self.p_scores_1)
                 self.split_player_scores(player)
-                self.game_hit_r.config(state='disable')
+                self.bc.itemconfigure(self.game_hit_r, state='disable')
+                self.r_stand_img['format'] = 'png -alpha 0.5'
 
 
     def player_split(self):
+        self.bc.itemconfigure(self.game_split, state='disable')
         if self.game._bet.cash < self.game._bet.amount:
             flash = threading.Thread(target=self.amount_flash)
             flash.start()
@@ -700,8 +732,10 @@ class LasVegas:
             self.game.split()
             self._cash(self.game._bet.cash)
             self.master.update()
-            self.game_hit.destroy()
-            self.game_stand.destroy()
+            #self.game_hit.destroy()
+            #self.game_stand.destroy()
+            self.bc.delete(self.game_hit)
+            self.bc.delete(self.game_stand)
             self.dealer_cards()
             self.moneybox_split(210, 450, 510, 450)
             self.player_cards(0, split=True)
@@ -715,20 +749,24 @@ class LasVegas:
 
 
     def split_player_stand(self, player):
-        self.p_stand = True
         if self.game_insurance:
             self.game_insurance.destroy()
 
         if player == 0:
-            self.game_stand_left.config(state='disable')
-            self.game_hit_l.config(state='disable')
             self.p0 = True
-        if player ==1:
-            self.game_stand_right.config(state='disable')
-            self.game_hit_r.config(state='disable')
+            self.bc.itemconfigure(self.game_stand_left, state='disable')
+            self.l_stand_img['format'] = 'png -alpha 0.5'
+            self.bc.itemconfigure(self.game_hit_l, state='disable')
+            self.l_hit_img['format'] = 'png -alpha 0.5'
+        if player == 1:
             self.p1 = True
+            self.bc.itemconfigure(self.game_stand_right, state='disable')
+            self.r_stand_img['format'] = 'png -alpha 0.5'
+            self.bc.itemconfigure(self.game_hit_r, state='disable')
+            self.r_hit_img['format'] = 'png -alpha 0.5'
 
         if self.p0 == True and self.p1 == True:
+            self.p_stand = True
             for i in range(2):
                 stand = self.game.player_stand(i)
 
@@ -763,13 +801,14 @@ class LasVegas:
 
 
     def player_stand(self):
+        self.bc.itemconfigure(self.game_stand, state='disable')
         self.p_stand = True
         if self.d_d_btn:
             self.d_d_btn.destroy()
         if self.ins_btn != False:
             self.bc.delete(self.ins_btn)
         if self.game_split:
-            self.game_split.destroy()
+            self.bc.delete(self.game_split)
         stand = self.game.player_stand(0)
         self.dealer_column -=25
         self.dealer_row -=20
@@ -880,6 +919,7 @@ class LasVegas:
                 self.p_stand = True
                 self.card_generator(self.bc, self.dealer_row, self.dealer_column, self.game_deal['dealer'][1])
                 self.game_stand.config(state='disable')
+                self.stand_img['format'] = 'png -alpha 0.5'
                 self._tie()
         else:
             return False
@@ -900,8 +940,8 @@ class LasVegas:
             self.bc.delete(self.logo)
             self.bc.create_window(475,300, window=self.bjlabel, anchor='center')
 
-            self.game_hit.destroy()
-            self.game_stand.destroy()
+            self.bc.delete(self.game_hit)
+            self.bc.delete(self.game_stand)
             self.game._bet.amount = 0
             self.p_again()
             self.bc.itemconfigure(self.money, text=f'${self.game._bet.cash}')
@@ -951,8 +991,8 @@ class LasVegas:
         self.p_again()
         self.bc.itemconfigure(self.money, text=f'${self.game._bet.cash}')
         self.game._bet.amount = 0
-        self.game_hit.destroy()
-        self.game_stand.destroy()
+        self.bc.delete(self.game_hit)
+        self.bc.delete(self.game_stand)
         time.sleep(0.4)
         self.sound.s_loose()
 
@@ -974,8 +1014,8 @@ class LasVegas:
         self.p_again()
         self.bc.itemconfigure(self.money, text=f'${self.game._bet.cash}')
         self.game._bet.amount = 0
-        self.game_hit.destroy()
-        self.game_stand.destroy()
+        self.bc.delete(self.game_hit)
+        self.bc.delete(self.game_stand)
         time.sleep(0.4)
         self.sound.s_win()
 
@@ -998,8 +1038,8 @@ class LasVegas:
         self.sound.s_tie()
         self.game._bet.cash = self.game._bet.tie(self.game._bet.amount)
         self.bc.itemconfigure(self.money, text=f'${self.game._bet.cash}')
-        self.game_hit.destroy()
-        self.game_stand.destroy()
+        self.bc.delete(self.game_hit)
+        self.bc.delete(self.game_stand)
         self.game._bet.amount = 0
 
 
