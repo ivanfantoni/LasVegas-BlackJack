@@ -65,7 +65,6 @@ class LasVegas:
         self.ddbtn = False
         self.game_deal = False
         self.game_split = False
-        self.game_hit = False
         self.d_scores = False
         self.game_insurance = False
         self.p_stand = False
@@ -640,9 +639,13 @@ class LasVegas:
         if self.d_d_btn:
             self.d_d_btn.destroy()
         if self.game_split:
+<<<<<<< HEAD
             self.bc.delete(self.game_split)
         if self.ins_btn != False:
             self.bc.delete(self.ins_btn)
+=======
+            self.game_split.destroy()
+>>>>>>> parent of c86c97b... Exceptions
         if len(self.game_deal[0]) == 4 or len(self.game_deal[0]) == 8 or len(self.game_deal[0]) == 12:
             self.player_row +=80
         hit = self.game.hit(0)
@@ -654,12 +657,18 @@ class LasVegas:
         if self.score <=21:
             self.bc.delete(self.p_scores)
             self.player_scores()
+<<<<<<< HEAD
             try:
                 if self.score == 21:
                     self.bc.itemconfigure(self.game_hit, state='disable')
                     self.hit_img['format'] = 'png -alpha 0.5'
             except TclError:
                 pass
+=======
+            if self.score == 21:
+                self.game_hit.config(state='disable')
+
+>>>>>>> parent of c86c97b... Exceptions
         else:
             self.bc.delete(self.p_scores)
             self.player_scores()
