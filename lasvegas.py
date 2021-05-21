@@ -91,25 +91,24 @@ class Game(BlackJack):
                 self.HAND['dealer'] = self.HAND[g]
                 del self.HAND[g]
         
-        try:
-            for g in self.HAND:
+        for g in self.HAND:
+            try:
                 self.HAND[g].append(self.game_sabot[0])
                 del self.game_sabot[0]
-        except IndexError:
-            self.game_sabot = self.game_sabot + self.sabot()
-            self.HAND[g].append(self.game_sabot[0])
-            del self.game_sabot[0]
-        try:
-            for g in self.HAND:
-                self.HAND[g].append(self.game_sabot[0])
-                del self.game_sabot[0]
-        except IndexError:
-            self.game_sabot = self.game_sabot + self.sabot()
-            for g in self.HAND:
+            except IndexError:
+                self.game_sabot = self.game_sabot + self.sabot()
                 self.HAND[g].append(self.game_sabot[0])
                 del self.game_sabot[0]
 
-            self.scores(g)
+        for g in self.HAND:
+            try:
+                self.HAND[g].append(self.game_sabot[0])
+                del self.game_sabot[0]
+            except IndexError:
+                self.game_sabot = self.game_sabot + self.sabot()
+                self.HAND[g].append(self.game_sabot[0])
+                del self.game_sabot[0]
+                self.scores(g)
         return self.HAND
 
 
@@ -123,7 +122,6 @@ class Game(BlackJack):
             self.HAND[player].append(self.game_sabot[0])
             del self.game_sabot[0]
             self.scores(player)
-
         return self.HAND
 
 
